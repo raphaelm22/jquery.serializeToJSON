@@ -24,5 +24,6 @@
   "bugs": {
     "url": "https://github.com/raphaelm22/jquery.serializeToJSON/issues"
   },
-  "homepage": "https://github.com/raphaelm22/jquery.serializeToJSON#readme"
+  "homepage": "https://github.com/raphaelm22/jquery.serializeToJSON#readme",
+  "dependencies": {}
 }
