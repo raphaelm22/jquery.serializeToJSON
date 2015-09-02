@@ -114,7 +114,7 @@ var obj = $("#myForm").serializeToJSON();
   ],
   IsNewCustomer: true,
   ReceiveEmailPartner: false,
-  ReceiveSMSPartner": false,
+  ReceiveSMSPartner: false,
   Product: {
     0: {
       ID: "54457",
