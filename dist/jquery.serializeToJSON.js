@@ -1,7 +1,7 @@
 /**
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.0.0 (August, 2015)
+ * @version: v1.1.0 (Setember, 2015)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
@@ -16,10 +16,10 @@
     $.fn.serializeToJSON = function(options) {
 
 		var f = {
-			settings: $.extend({}, $.fn.serializeToJSON.defaults, options),
+			settings: $.extend(true, {}, $.fn.serializeToJSON.defaults, options),
 
-			getValue: function(input) {
-				var value = input.value;				
+			getValue: function($input) {
+				var value = $input.val();
 
 				if (this.settings.parseBooleans) {
 					var boolValue = (value + "").toLowerCase();
@@ -27,18 +27,27 @@
 						value = boolValue === "true";
 					}
 				}
+				
+				if (this.settings.parseFloat.condition !== undefined && $input.is(this.settings.parseFloat.condition)) {
+					value = this.settings.parseFloat.getInputValue($input);
+					value = Number(value);
+					
+                    if (this.settings.parseFloat.nanToZero && isNaN(value)){
+                        value = 0;
+                    }                   
+                }
 
 				return value;
 			},
 
-			createProperty: function(o, value, names, input) {
+			createProperty: function(o, value, names, $input) {
 				var navObj = o;
 
 				for (var i = 0; i < names.length; i++) {
 					var currentName = names[i];
 
 					if (i === names.length - 1) {								
-						var isSelectMultiple = $(input).is("select") && $(input).prop("multiple");
+						var isSelectMultiple = $input.is("select") && $input.prop("multiple");
 						if (isSelectMultiple && value !== null){
 							if (!Array.isArray(navObj[currentName])) {								
 								navObj[currentName] = new Array();
@@ -110,11 +119,12 @@
 				var serializedObject = {}
 
 				$.each(formAsArray, function(i, item) {
-					var value = self.getValue(item);
-					var names = item.name.split(".");
-					var input = $(":input[name='" + item.name + "']")
+					var $input = $(":input[name='" + item.name + "']", selector)
+					
+					var value = self.getValue($input);
+					var names = item.name.split(".");					
 
-					self.createProperty(serializedObject, value, names, input);
+					self.createProperty(serializedObject, value, names, $input);
 				});
 
 				return serializedObject;
@@ -125,8 +135,15 @@
     };
 	
 	$.fn.serializeToJSON.defaults = {
-		associativeArrays: true,
-		parseBooleans: true
-	};
+        associativeArrays: true,
+        parseBooleans: true,
+		parseFloat: {
+			condition: undefined,
+			nanToZero: true,
+			getInputValue: function($input){
+				return $input.val().split(",").join("");
+			}
+		}
+    };
 
 })(jQuery);

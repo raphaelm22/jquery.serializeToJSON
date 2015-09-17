@@ -65,18 +65,21 @@
 					<th>Product ID</th>
 					<th>Name</th>
 					<th>Quantity</th>
+					<th>Cost</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td><input type="text" value="54457" name="Product[0].ID" /></td>
+					<td><input type="text" value="54457" name="Product[0].ID" class="number" /></td>
 					<td><input type="text" value="Smartphone" name="Product[0].Name" /></td>
-					<td><input type="text" value="5" name="Product[0].Quantity" /></td>
+					<td><input type="text" value="5" name="Product[0].Quantity" class="number" /></td>
+					<td><input type="text" value="1,054.99" name="Product[0].Cost" class="money" /></td>
 				</tr>
 				<tr>
-					<td><input type="text" value="97518" name="Product[1].ID" /></td>
+					<td><input type="text" value="97518" name="Product[1].ID" class="number" /></td>
 					<td><input type="text" value="iPad" name="Product[1].Name" /></td>
-					<td><input type="text" value="3" name="Product[1].Quantity" /></td>
+					<td><input type="text" value="3" name="Product[1].Quantity" class="number" /></td>
+					<td><input type="text" value="2,119.99" name="Product[1].Cost" class="money" /></td>
 				</tr>
 			</tbody>
 		</table>
@@ -97,7 +100,11 @@
 	<script type="text/javascript">
 	$(function(){
 		$("#btnSerialize").on("click", function(){
-			var obj = $("#myForm").serializeToJSON();			
+			var obj = $("#myForm").serializeToJSON({
+				parseFloat: {
+					condition: ".number,.money"
+				}			
+			});
 			console.log(obj);
 			
 			var jsonString = JSON.stringify(obj);

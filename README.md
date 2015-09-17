@@ -77,18 +77,21 @@ HTML form (input, textarea and select tags supported):
 				<th>Product ID</th>
 				<th>Name</th>
 				<th>Quantity</th>
+				<th>Cost</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td><input type="text" value="54457" name="Product[0].ID" /></td>
+				<td><input type="text" value="54457" name="Product[0].ID" class="number" /></td>
 				<td><input type="text" value="Smartphone" name="Product[0].Name" /></td>
-				<td><input type="text" value="5" name="Product[0].Quantity" /></td>
+				<td><input type="text" value="5" name="Product[0].Quantity" class="number" /></td>
+				<td><input type="text" value="1,054.99" name="Product[0].Cost" class="money" /></td>
 			</tr>
 			<tr>
-				<td><input type="text" value="97518" name="Product[1].ID" /></td>
+				<td><input type="text" value="97518" name="Product[1].ID" class="number" /></td>
 				<td><input type="text" value="iPad" name="Product[1].Name" /></td>
-				<td><input type="text" value="3" name="Product[1].Quantity" /></td>
+				<td><input type="text" value="3" name="Product[1].Quantity" class="number" /></td>
+				<td><input type="text" value="2,119.99" name="Product[1].Cost" class="money" /></td>
 			</tr>
 		</tbody>
 	</table>
@@ -119,12 +122,14 @@ var obj = $("#myForm").serializeToJSON();
     0: {
       ID: "54457",
       Name: "Smartphone",
-      Quantity: "5"
+      Quantity: "5",
+	  Cost: "1,054.99"
     },
     1: {
       ID: "97518",
       Name: "iPad",
-      Quantity: 3
+      Quantity: "3",
+	  Cost: "2,119.99"
     }
   }
 }
@@ -148,12 +153,14 @@ var objNotAssociativeArrays = $("#myForm").serializeToJSON({associativeArrays: f
     {
       ID: "54457",
       Name: "Smartphone",
-      Quantity: "5"
+      Quantity: "5",
+	  Cost: "1,054.99"
     },
     {
       ID: "97518",
       Name: "iPad",
-      Quantity: "3"
+      Quantity: "3",
+	  Cost: "2,119.99"
     }
   ]
 }
@@ -182,8 +189,13 @@ To change the default behavior you use the following options:
 
   * **associativeArrays: true**, by default, the method does not serialize using the `Array` but `Associative Arrays`.
   * **parseBooleans: true**, automatically detect and convert strings `"true"` and `"false"` to booleans `true / false`.
- 
-
+  * **parseFloat.condition: undefined**, filter used in the function `jQuery().is('condition')` to detect and convert into float / number.
+  Example: `".number"` or `"[mask='money']"`.
+  * **parseFloat.nanToZero: true**, automatically detect `NaN` value and changes the value to zero.
+  * **parseFloat.getInputValue: `function(){}`**, By default, returns the input value without commas, not an error occurs in conversion.
+  if your location uses comma for decimal separation, for example in German or Brazil, you can change to: `function(i){ return i.split(".").join("").replace(",", "."); }`
+  
+  
 
 ## Defaults ##
 
