@@ -1,7 +1,7 @@
 /**
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.1.0 (Setember, 2015)
+ * @version: v1.1.1 (Setember, 2015)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
@@ -27,8 +27,12 @@
 						value = boolValue === "true";
 					}
 				}
-				
-				if (this.settings.parseFloat.condition !== undefined && $input.is(this.settings.parseFloat.condition)) {
+
+				var floatCondition = this.settings.parseFloat.condition;
+				if (floatCondition !== undefined && (
+				    (typeof(floatCondition) === "string"   && $input.is(floatCondition)) ||
+				    (typeof(floatCondition) === "function" && floatCondition($input)))) {
+
 					value = this.settings.parseFloat.getInputValue($input);
 					value = Number(value);
 					
@@ -119,7 +123,7 @@
 				var serializedObject = {}
 
 				$.each(formAsArray, function(i, item) {
-					var $input = $(":input[name='" + item.name + "']", selector)
+				    var $input = $(":input[name='" + item.name + "']", selector);
 					
 					var value = self.getValue($input);
 					var names = item.name.split(".");					

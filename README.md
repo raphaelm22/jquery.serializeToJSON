@@ -102,7 +102,11 @@ HTML form (input, textarea and select tags supported):
 JavaScript:
 
 ```javascript
-var obj = $("#myForm").serializeToJSON();
+var obj = $("#myForm").serializeToJSON({
+				parseFloat: {
+					condition: ".number,.money"
+				}			
+			});
 
 // obj =>
 {
@@ -120,16 +124,16 @@ var obj = $("#myForm").serializeToJSON();
   ReceiveSMSPartner: false,
   Product: {
     0: {
-      ID: "54457",
+      ID: 54457,
       Name: "Smartphone",
-      Quantity: "5",
-	  Cost: "1,054.99"
+      Quantity: 5,
+	  Cost: 1,054.99
     },
     1: {
-      ID: "97518",
+      ID: 97518,
       Name: "iPad",
-      Quantity: "3",
-	  Cost: "2,119.99"
+      Quantity: 3,
+	  Cost: 2,119.99
     }
   }
 }
@@ -188,12 +192,30 @@ To change the default options, simply enter the desired options via parameter of
 To change the default behavior you use the following options:
 
   * **associativeArrays: true**, by default, the method does not serialize using the `Array` but `Associative Arrays`.
+  
   * **parseBooleans: true**, automatically detect and convert strings `"true"` and `"false"` to booleans `true / false`.
-  * **parseFloat.condition: undefined**, filter used in the function `jQuery().is('condition')` to detect and convert into float / number.
-  Example: `".number"` or `"[mask='money']"`.
+  
+  * **parseFloat.condition: undefined**, the value can be a `string` or `function`
+  
+  **`string`**: filter used in the function [`jQuery().is('condition')`] (http://api.jquery.com/is/) to detect and convert into float / number. Example: `".number"` or `"[mask='money']"`.
+  
+  **`function`**: the return of function sets when the convert occur. example:
+```javascript
+function(i) {
+	var v = i.val().split(",").join("");
+	return !isNaN(Number(v)); // In this case, conversion will always occur when possible
+}
+```
+  
   * **parseFloat.nanToZero: true**, automatically detect `NaN` value and changes the value to zero.
+  
   * **parseFloat.getInputValue: `function(){}`**, By default, returns the input value without commas, not an error occurs in conversion.
-  if your location uses comma for decimal separation, for example in German or Brazil, you can change to: `function(i){ return i.split(".").join("").replace(",", "."); }`
+  if your location uses comma for decimal separation, for example in German or Brazil, you can change to: 
+```javascript
+function(i){ 
+	return i.val().split(".").join("").replace(",", "."); 
+}
+```
   
   
 
