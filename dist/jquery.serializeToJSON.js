@@ -19,7 +19,14 @@
 			settings: $.extend(true, {}, $.fn.serializeToJSON.defaults, options),
 
 			getValue: function($input) {
-				var value = $input.val();
+        var value;
+
+        if ($input.attr("type") === "radio") {
+            var seletor = $input.selector + ":checked";
+            value = $(seletor).val();
+        } else {
+            value = $input.val();
+        }
 
 				if (this.settings.parseBooleans) {
 					var boolValue = (value + "").toLowerCase();
@@ -35,10 +42,10 @@
 
 					value = this.settings.parseFloat.getInputValue($input);
 					value = Number(value);
-					
+
                     if (this.settings.parseFloat.nanToZero && isNaN(value)){
                         value = 0;
-                    }                   
+                    }
                 }
 
 				return value;
@@ -50,10 +57,10 @@
 				for (var i = 0; i < names.length; i++) {
 					var currentName = names[i];
 
-					if (i === names.length - 1) {								
+					if (i === names.length - 1) {
 						var isSelectMultiple = $input.is("select") && $input.prop("multiple");
 						if (isSelectMultiple && value !== null){
-							if (!Array.isArray(navObj[currentName])) {								
+							if (!Array.isArray(navObj[currentName])) {
 								navObj[currentName] = new Array();
 							}
 							navObj[currentName].push(value);
@@ -91,7 +98,7 @@
 					}
 				}
 			},
-			
+
 			includeUncheckValues: function(selector, formAsArray){
 				$(":radio", selector).each(function(){
 					var isUncheckRadio = $("input[name=" + this.name + "]:radio:checked").length === 0;
@@ -103,8 +110,8 @@
 						});
 					}
 				});
-				
-				$("select[multiple]", selector).each(function(){					
+
+				$("select[multiple]", selector).each(function(){
 					if ($(this).val() === null){
 						formAsArray.push({
 							name: this.name,
@@ -116,7 +123,7 @@
 
 			serializer: function(selector) {
 				var self = this;
-				
+
 				var formAsArray = $(selector).serializeArray();
 				this.includeUncheckValues(selector, formAsArray);
 
@@ -124,9 +131,9 @@
 
 				$.each(formAsArray, function(i, item) {
 				    var $input = $(":input[name='" + item.name + "']", selector);
-					
+
 					var value = self.getValue($input);
-					var names = item.name.split(".");					
+					var names = item.name.split(".");
 
 					self.createProperty(serializedObject, value, names, $input);
 				});
@@ -137,7 +144,7 @@
 
 		return f.serializer(this);
     };
-	
+
 	$.fn.serializeToJSON.defaults = {
         associativeArrays: true,
         parseBooleans: true,
