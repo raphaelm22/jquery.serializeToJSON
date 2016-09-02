@@ -1,7 +1,7 @@
 /**
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.1.2 (March, 2016)
+ * @version: v1.1.3 (September, 2016)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
@@ -95,7 +95,7 @@
 			
 			includeUncheckValues: function(selector, formAsArray){
 				$(":radio", selector).each(function(){
-					var isUncheckRadio = $("input[name=" + this.name + "]:radio:checked").length === 0;
+					var isUncheckRadio = $("input[name='" + this.name + "']:radio:checked").length === 0;
 					if (isUncheckRadio)
 					{
 						formAsArray.push({
