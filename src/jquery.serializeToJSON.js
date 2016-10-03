@@ -20,7 +20,15 @@
 
 			getValue: function($input) {
 				
-				var value = $input.is(":radio") ? ($($input.selector+":checked").val() || null) : $input.val();
+				var value = $input.val();
+
+			    if ($input.is(":radio")) {
+			        value = $($input.selector + ":checked").val() || null;
+			    }
+
+			    if ($input.is(":checkbox")) {
+			        value = $($input.selector).prop('checked');
+			    }
 
 				if (this.settings.parseBooleans) {
 					var boolValue = (value + "").toLowerCase();
