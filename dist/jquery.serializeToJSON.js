@@ -1,7 +1,7 @@
 /**
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.1.3 (September, 2016)
+ * @version: v1.1.4 (October, 2016)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
@@ -20,7 +20,15 @@
 
 			getValue: function($input) {
 				
-				var value = $input.is(":radio") ? ($($input.selector+":checked").val() || null) : $input.val();
+				var value = $input.val();
+
+			    if ($input.is(":radio")) {
+			        value = $($input.selector + ":checked").val() || null;
+			    }
+
+			    if ($input.is(":checkbox")) {
+			        value = $($input.selector).prop('checked');
+			    }
 
 				if (this.settings.parseBooleans) {
 					var boolValue = (value + "").toLowerCase();
