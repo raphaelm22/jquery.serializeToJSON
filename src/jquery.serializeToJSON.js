@@ -1,7 +1,7 @@
-/**
+/** 
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.1.5 (October, 2016)
+ * @version: v1.2.0 (October, 2016)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
