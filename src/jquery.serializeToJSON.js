@@ -1,7 +1,7 @@
 /** 
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.2.0 (October, 2016)
+ * @version: v1.2.1 (November, 2016)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
@@ -19,7 +19,6 @@
 			settings: $.extend(true, {}, $.fn.serializeToJSON.defaults, options),
 
 			getValue: function($input) {
-				
 				var value = $input.val();
 
 			    if ($input.is(":radio")) {
@@ -61,11 +60,18 @@
 
 					if (i === names.length - 1) {								
 						var isSelectMultiple = $input.is("select") && $input.prop("multiple");
+						
 						if (isSelectMultiple && value !== null){
-							if (!Array.isArray(navObj[currentName])) {								
-								navObj[currentName] = new Array();
+							navObj[currentName] = new Array();
+							
+							if (Array.isArray(value)){
+								$(value).each(function() {
+									navObj[currentName].push(this);
+								});
 							}
-							navObj[currentName].push(value);
+							else{
+								navObj[currentName].push(value);
+							}
 						} else {
 							navObj[currentName] = value;
 						}
@@ -130,9 +136,9 @@
 				this.includeUncheckValues(selector, formAsArray);
 
 				var serializedObject = {}
-
+				
 				$.each(formAsArray, function(i, item) {
-				    var $input = $(":input[name='" + item.name + "']", selector);
+					var $input = $(":input[name='" + item.name + "']", selector);
 					
 					var value = self.getValue($input);
 					var names = item.name.split(".");					
