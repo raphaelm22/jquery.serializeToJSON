@@ -1,7 +1,7 @@
 /** 
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.2.2 (November, 2017)
+ * @version: v1.3.0 (February, 2019)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
@@ -9,10 +9,28 @@
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  */
 
-
-(function($) {
-    "use strict";
-
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = function( root, jQuery ) {
+            if ( jQuery === undefined ) {
+                if ( typeof window !== 'undefined' ) {
+                    jQuery = require('jquery');
+                }
+                else {
+                    jQuery = require('jquery')(root);
+                }
+            }
+            factory(jQuery);
+            return jQuery;
+        };
+    } else {
+        factory(jQuery);
+    }
+}(function ($) {
+	'use strict';
+	
     $.fn.serializeToJSON = function(options) {
 
 		var f = {
@@ -164,5 +182,4 @@
 			}
 		}
     };
-
-})(jQuery);
+}));
