@@ -1,14 +1,14 @@
 /** 
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.3.0 (February, 2019)
+ * @version: v1.4.0 (October, 2019)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
  *
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  */
-
+ 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery'], factory);
@@ -146,24 +146,59 @@
 					}
 				});
 			},
+			
+			//clone of the jquery method, but returns the element
+			serializeArray: function(formSelector) {
+				var rCRLF = /\r?\n/g,
+					rsubmitterTypes = /^(?:submit|button|image|reset|file)$/i,
+					rsubmittable = /^(?:input|select|textarea|keygen)/i,
+					rcheckableType = ( /^(?:checkbox|radio)$/i );
+				
+				return formSelector.map(function() {
+					var elements = jQuery.prop( this, "elements" );
+					return elements ? jQuery.makeArray( elements ) : this;
+				})
+				.filter( function() {
+					var type = this.type;				
+					return this.name && !jQuery( this ).is( ":disabled" ) &&
+						rsubmittable.test( this.nodeName ) && !rsubmitterTypes.test( type ) &&
+						( this.checked || !rcheckableType.test( type ) );
+				})
+				.map( function( i, elem ) {
+					var val = jQuery( this ).val();
+
+					if ( val == null ) return null;
+
+					if ( Array.isArray( val ) ) {
+						return jQuery.map( val, function( val ) {
+							return { name: elem.name, value: val.replace( rCRLF, "\r\n" ), elem: elem };
+						} );
+					}
+
+					return { name: elem.name, value: val.replace( rCRLF, "\r\n" ), elem: elem };
+				}).get();
+			},
 
 			serializer: function(selector) {
 				var self = this;
 				
-				var formAsArray = $(selector).serializeArray();
+				var formAsArray = this.serializeArray($(selector));
 				this.includeUncheckValues(selector, formAsArray);
 
 				var serializedObject = {}
 				
-				$.each(formAsArray, function(i, item) {
-					var $input = $(":input[name='" + item.name + "']", selector);
+				for (var prop in formAsArray) {					
+					if(formAsArray.hasOwnProperty( prop )) {
+						var item = formAsArray[prop];
+						
+						var $input = $(item.elem);
 					
-					var value = self.getValue($input);
-					var names = item.name.split(".");					
+						 var value = self.getValue($input);
+						 var names = item.name.split(".");					
 
-					self.createProperty(serializedObject, value, names, $input);
-				});
-
+						self.createProperty(serializedObject, value, names, $input);
+					} 
+				}
 				return serializedObject;
 			}
 		};
