@@ -1,7 +1,7 @@
 /** 
  * serializeToJSON jQuery plugin
  * https://github.com/raphaelm22/jquery.serializeToJSON
- * @version: v1.4.0 (October, 2019)
+ * @version: v1.4.1 (October, 2019)
  * @author: Raphael Nunes
  *
  * Created by Raphael Nunes on 2015-08-28.
@@ -90,6 +90,9 @@
 							else{
 								navObj[currentName].push(value);
 							}
+						} else if(typeof navObj[currentName] !== "undefined"){
+							if (!$input.is("[type='hidden']"))
+								navObj[currentName] = value;
 						} else {
 							navObj[currentName] = value;
 						}
